@@ -1,37 +1,43 @@
-## Welcome to GitHub Pages
+安装docker：
+curl -fsSL https://get.docker.com -o get-docker.sh  && \
+bash get-docker.sh
+service docker restart
+systemctl enable docker
 
-You can use the [editor on GitHub](https://github.com/izchuan/V2ray-/edit/gh-pages/index.md) to maintain and preview the content for your website in Markdown files.
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+面板添加节点
+kr158.asoobear.com;443;2;ws;;path=/hls/cctv5phd.m3u8|kr158.asoobear.com
 
-### Markdown
+中转地址
+kr158.asoobear.com;443;2;ws;;path=/hls/cctv5phd.m3u8|host=kr158.asoobear.com|relayserver=122.192.189.41|
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
+outside_port=10016
 
-```markdown
-Syntax highlighted code block
+后端数据库对接：
+docker run -d --name=v2ray \
+-e speedtest=6  -e api_port=2333 -e usemysql=1 -e downWithPanel=0 \
+-e node_id=42 -e sspanel_url=https://v.oobear.vip -e key=izchuan  -e MYSQLHOST=64.64.244.11  \
+-e MYSQLDBNAME=v_oobear_vip -e MYSQLUSR=v_oobear_vip -e MYSQLPASSWD=xS8hZiekpW64FKL3 -e MYSQLPORT=3306 \
+--log-opt max-size=10m --log-opt max-file=5 \
+--network=host --restart=always \
+izchuan/v2ray_v3:go_pay
 
-# Header 1
-## Header 2
-### Header 3
 
-- Bulleted
-- List
+一键中转：
+wget -qO natcfg.sh http://arloor.com/sh/iptablesUtils/natcfg.sh && bash natcfg.sh
 
-1. Numbered
-2. List
+中转项目：https://github.com/arloor/iptablesUtils
 
-**Bold** and _Italic_ and `Code` text
+如果你参数输入错误，想重新配置
+可以输入：
+docker rm -f v2ray
 
-[Link](url) and ![Image](src)
-```
+关闭防火墙
+查看防火墙状态：firewall-cmd --state
+停止firewall：systemctl stop firewalld.service
+禁止firewall开机启动：systemctl disable firewalld.service
 
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
+安装 BBR
+wget -N --no-check-certificate "https://raw.githubusercontent.com/chiakge/Linux-NetSpeed/master/tcp.sh" && chmod 
 
-### Jekyll Themes
-
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/izchuan/V2ray-/settings). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
-
-### Support or Contact
-
-Having trouble with Pages? Check out our [documentation](https://docs.github.com/categories/github-pages-basics/) or [contact support](https://support.github.com/contact) and we’ll help you sort it out.
++x tcp.sh && ./tcp.sh
